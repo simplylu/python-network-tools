@@ -31,24 +31,30 @@ import socket
 
 
 def run(args):
+    # Store values from parsed arguments
     host = args.ip
     port = args.port
     timeout = args.timeout or 10
     try:
+        # Create socket and connect to host:port
         s = socket.socket()
         s.settimeout(timeout)
         s.connect((host, port))
+        # Receive data from service
         banner = s.recv(1024).decode().strip()
+        # Return data as JSON
         return {
             "host": args.ip,
             "port": args.port,
             "output": banner
         }
     except socket.error as e:
+        # Return error in case the connection fails
         return {
             "host": args.ip,
             "port": args.port,
             "error": str(e)
         }
     finally:
+        # Close the socket in any case
         s.close()
